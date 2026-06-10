@@ -1,147 +1,65 @@
-# 🗄️ Text to SQL AI Assistant
+# 🗄️ Text-to-SQL AI Assistant
 
-> Convert natural language questions into SQL queries instantly — no coding needed.
+> Convert plain English questions into accurate SQL queries — no SQL knowledge needed. Schema-aware prompt injection ensures the LLM generates correct queries against your actual database structure.
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-Live-brightgreen)
-![Gemini](https://img.shields.io/badge/LLM-Gemini%20API-orange)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
-## 🌐 Live Demo
-👉 https://palakbiradar-text-to-sql.streamlit.app
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit)](https://palakbiradar-text-to-sql.streamlit.app)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)](https://python.org)
 
 ---
 
-## 📌 Problem Statement
-Non-technical users struggle to extract insights from databases 
-because they don't know SQL. Business teams waste hours waiting 
-for developers to write queries for them.
+## The core problem this solves
 
-Text to SQL AI solves this by letting anyone ask questions in 
-plain English and instantly getting accurate SQL queries and 
-results — reducing query-writing effort by 60%.
+Generic Text-to-SQL systems hallucinate column names because the LLM doesn't know your schema. This system injects the live schema into every prompt — the LLM sees your actual table names, column names, and data types before generating any query.
 
----
+```
+User question (plain English)
+        │
+        ▼
+SQLite schema inspector
+(extracts table names, columns, types)
+        │
+        ▼
+Schema-aware prompt construction:
+"Given this schema: {schema}
+ Answer this question: {question}
+ Return only valid SQL."
+        │
+        ▼
+Gemini API (LLM)
+        │
+        ▼
+Generated SQL query
+        │
+        ▼
+Execute against live SQLite DB
+        │
+        ▼
+Results table + natural language summary
+```
 
-## ✨ Features
-- ✅ Natural language to SQL conversion
-- ✅ Gemini API powered query generation
-- ✅ Live database query execution
-- ✅ Results displayed in clean table format
-- ✅ E-commerce sample database included
-- ✅ No SQL knowledge required
-- ✅ Streamlit Cloud deployed
-
----
-
-## 🧠 System Workflow
-
-User Question → Gemini LLM → SQL Query → Database → Results Table
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Technology |
-|---|---|
-| Language | Python |
-| Frontend | Streamlit |
-| LLM | Gemini API |
-| Database | SQLite |
-| Deployment | Streamlit Cloud |
-| Version Control | GitHub |
+**Why schema injection matters:**
+Without it, the LLM might generate `SELECT customer_name FROM users` when your table is actually called `customers` with a column called `full_name`. Schema injection eliminates this class of error entirely.
 
 ---
 
-## 📂 Project Structure
+## Run locally
 
-text-to-sql-ai/
-├── app.py              # Main Streamlit application
-├── sql_chain.py        # LLM to SQL chain logic
-├── database.py         # Database setup and connection
-├── ecommerce.db        # Sample SQLite database
-├── requirements.txt    # Dependencies
-└── README.md
-
----
-
-## 📸 Screenshots
-
-## 📸 Screenshots
-
-### Main Interface
-![Main Interface](upload.png)
-
-### Query Results
-![Results](results.png)
-
-### Dashboard
-![Dashboard](dashboard.png)
-
-
----
-
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone Repository
+```bash
 git clone https://github.com/pratikshabiradar19/text-to-sql-ai.git
 cd text-to-sql-ai
 
-### 2️⃣ Create Virtual Environment
-python -m venv venv
-venv\Scripts\activate
-
-### 3️⃣ Install Dependencies
 pip install -r requirements.txt
 
-### 4️⃣ Configure API Key
-Create a .env file:
-GEMINI_API_KEY=your_api_key_here
-
-Get your free Gemini API key at 👉 https://makersuite.google.com/app/apikey
-
-### 5️⃣ Run Application
+# Add GOOGLE_API_KEY to .env
 streamlit run app.py
+```
 
 ---
 
-## 💡 Example Queries You Can Ask
+## Tech stack
 
-| Natural Language | Generated SQL |
-|---|---|
-| Show all customers | SELECT * FROM customers |
-| Top 5 products by sales | SELECT * FROM products ORDER BY sales DESC LIMIT 5 |
-| Total revenue this month | SELECT SUM(amount) FROM orders WHERE... |
+`LangChain` `Gemini API` `SQLite` `Python` `Streamlit`
 
 ---
 
-## 🔥 Key Highlights
-- Reduces SQL query writing effort by 60%
-- Works for non-technical business users
-- Gemini LLM understands database schema automatically
-- Clean and simple UI built with Streamlit
-- Production deployed on Streamlit Cloud
-
----
-
-## 🚀 Future Improvements
-- [ ] Support for PostgreSQL and MySQL
-- [ ] Multi-table join query support
-- [ ] Query history and export
-- [ ] Upload custom database
-- [ ] Voice input support
-- [ ] FastAPI backend
-
----
-
-## 👩‍💻 Author
-**Pratiksha Biradar**
-Gen AI Developer | AI Engineer | Data Scientist
-
-- GitHub: https://github.com/pratikshabiradar19
-- LinkedIn: https://www.linkedin.com/in/pratiksha-biradar-979b98315
-
----
-
-## ⭐ Support
-If you like this project, give it a star ⭐ and share it!
+*Built by [Pratiksha Biradar](https://github.com/pratikshabiradar19) — Gen AI Engineer*
